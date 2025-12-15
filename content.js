@@ -85,7 +85,7 @@ function injectToolbar(target) {
 
   const zipButton = document.createElement("button");
   zipButton.id = "nfse-ext-zip-all";
-  zipButton.textContent = "Gerar ZIP";
+  zipButton.textContent = "Gerar .zip";
   zipButton.style.padding = "6px 12px";
   zipButton.style.cursor = "pointer";
 
@@ -546,13 +546,14 @@ async function main() {
   if (!tableEl) return;
   const { select, yearSelect, button, zipButton, status, spinner } = injectToolbar(tableEl);
 
-  const updateCount = () => {
-    const count = applyFilterToTable(tableEl, select.value || "", yearSelect.value || "");
-    status.textContent = `${count} linha(s) visível(is)`;
+  const updateSelection = () => {
+    const month = select.value || "todos";
+    const year = yearSelect.value || "";
+    status.textContent = `Selecionado: ${month}${year ? "/" + year : ""}`;
   };
-  select.addEventListener("change", updateCount);
-  yearSelect.addEventListener("change", updateCount);
-  updateCount();
+  select.addEventListener("change", updateSelection);
+  yearSelect.addEventListener("change", updateSelection);
+  updateSelection();
 
   button.addEventListener("click", async () => {
     button.disabled = true;

@@ -99,16 +99,44 @@ function injectToolbar(target) {
   spinner.id = "nfse-ext-spinner";
   spinner.className = "nfse-ext-spinner";
   spinner.style.display = "none";
+  spinner.style.marginLeft = "0";
+
+  const statusProcess = document.createElement("span");
+  statusProcess.id = "nfse-ext-status-process";
+  statusProcess.style.marginLeft = "0";
+  statusProcess.style.fontSize = "12px";
+
+  const statusPercent = document.createElement("span");
+  statusPercent.id = "nfse-ext-status-percent";
+  statusPercent.style.marginLeft = "4px";
+  statusPercent.style.fontSize = "12px";
+
+  const statusGroup = document.createElement("span");
+  statusGroup.id = "nfse-ext-status-group";
+  statusGroup.style.display = "inline-flex";
+  statusGroup.style.alignItems = "center";
+  statusGroup.style.gap = "4px";
+  statusGroup.appendChild(spinner);
+  statusGroup.appendChild(statusProcess);
+
+  const progress = document.createElement("progress");
+  progress.id = "nfse-ext-progress";
+  progress.max = 100;
+  progress.value = 0;
+  progress.style.width = "120px";
+  progress.style.marginLeft = "2px";
+  progress.style.display = "none";
 
   container.appendChild(select);
   container.appendChild(yearSelect);
   container.appendChild(button);
   container.appendChild(zipButton);
-  container.appendChild(status);
-  container.appendChild(spinner);
+  container.appendChild(statusGroup);
+  container.appendChild(statusPercent);
+  container.appendChild(progress);
 
   target.parentNode.insertBefore(container, target);
-  return { select, yearSelect, button, zipButton, status, spinner };
+  return { select, yearSelect, button, zipButton, statusProcess, statusPercent, spinner, progress };
 }
 
 function normalize(s) {
@@ -506,9 +534,10 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
-async function fetchXmlEntries(month, year) {
+async function fetchXmlEntries(month, year, onProgress) {
   const urls = await collectXmlLinksAcrossPages(month, year || "");
   const entries = [];
+  if (typeof onProgress === "function") onProgress(0);
   for (let i = 0; i < urls.length; i++) {
     const u = urls[i];
     const res = await fetch(u, {
@@ -536,6 +565,8 @@ async function fetchXmlEntries(month, year) {
       if (fn) name = fn.toLowerCase().endsWith(".xml") ? fn : `${fn}.xml`;
     }
     entries.push({ name, data: new Uint8Array(ab) });
+    const pct = Math.round(((i + 1) / urls.length) * 100);
+    if (typeof onProgress === "function") onProgress(pct);
     await new Promise((r) => setTimeout(r, 150));
   }
   return entries;
@@ -544,12 +575,13 @@ async function fetchXmlEntries(month, year) {
 async function main() {
   const tableEl = await waitForTable();
   if (!tableEl) return;
-  const { select, yearSelect, button, zipButton, status, spinner } = injectToolbar(tableEl);
+  const { select, yearSelect, button, zipButton, statusProcess, statusPercent, spinner, progress } = injectToolbar(tableEl);
 
   const updateSelection = () => {
     const month = select.value || "todos";
     const year = yearSelect.value || "";
-    status.textContent = `Selecionado: ${month}${year ? "/" + year : ""}`;
+    statusProcess.textContent = `Selecionado: ${month}${year ? "/" + year : ""}`;
+    statusPercent.textContent = "";
   };
   select.addEventListener("change", updateSelection);
   yearSelect.addEventListener("change", updateSelection);
@@ -560,18 +592,19 @@ async function main() {
     zipButton.disabled = true;
     const month = select.value || "";
     const year = yearSelect.value || "";
-    status.textContent = "Coletando XMLs...";
+    statusProcess.textContent = "Coletando XMLs...";
+    statusPercent.textContent = "";
     spinner.style.display = "inline-block";
     try {
       const urls = await collectXmlLinksAcrossPages(month, year);
       if (!urls.length) {
-        status.textContent = "Nenhum XML encontrado para o mês selecionado";
+        statusProcess.textContent = "Nenhum XML encontrado para o mês selecionado";
         return;
       }
-      status.textContent = `Iniciando download de ${urls.length} arquivo(s)`;
-      await startDomDownloads(urls, status, spinner);
+      statusProcess.textContent = `Iniciando download de ${urls.length} arquivo(s)`;
+      await startDomDownloads(urls, statusProcess, spinner);
     } catch (e) {
-      status.textContent = "Erro ao coletar XMLs";
+      statusProcess.textContent = "Erro ao coletar XMLs";
     } finally {
       button.disabled = true;
       zipButton.disabled = false;
@@ -584,23 +617,34 @@ async function main() {
     zipButton.disabled = true;
     const month = select.value || "";
     const year = yearSelect.value || "";
-    status.textContent = "Gerando ZIP...";
+    statusProcess.textContent = "Gerando ZIP...";
+    statusPercent.textContent = "0%";
     spinner.style.display = "inline-block";
+    progress.style.display = "inline-block";
+    progress.value = 0;
     try {
-      const entries = await fetchXmlEntries(month, year);
+      const entries = await fetchXmlEntries(month, year, (p) => {
+        progress.value = p;
+        statusPercent.textContent = `${p}%`;
+      });
       if (!entries.length) {
-        status.textContent = "Nenhum XML encontrado para o mês selecionado";
+        statusProcess.textContent = "Nenhum XML encontrado para o mês selecionado";
+        statusPercent.textContent = "";
         return;
       }
       const zip = createZipStore(entries);
       downloadBlob(zip, `nfse-xml-${month || "todos"}${year ? "-" + year : ""}.zip`);
-      status.textContent = `ZIP com ${entries.length} arquivo(s)`;
+      statusProcess.textContent = `ZIP com ${entries.length} arquivo(s)`;
+      statusPercent.textContent = "";
     } catch (e) {
-      status.textContent = "Erro ao gerar ZIP";
+      statusProcess.textContent = "Erro ao gerar ZIP";
+      statusPercent.textContent = "";
     } finally {
       button.disabled = true;
       zipButton.disabled = false;
       spinner.style.display = "none";
+      progress.style.display = "none";
+      progress.value = 0;
     }
   });
 }

@@ -81,6 +81,7 @@ function injectToolbar(target) {
   button.textContent = "Baixar Todos";
   button.style.padding = "6px 12px";
   button.style.cursor = "pointer";
+  button.disabled = true;
 
   const zipButton = document.createElement("button");
   zipButton.id = "nfse-ext-zip-all";
@@ -571,7 +572,7 @@ async function main() {
     } catch (e) {
       status.textContent = "Erro ao coletar XMLs";
     } finally {
-      button.disabled = false;
+      button.disabled = true;
       zipButton.disabled = false;
       spinner.style.display = "none";
     }
@@ -596,7 +597,7 @@ async function main() {
     } catch (e) {
       status.textContent = "Erro ao gerar ZIP";
     } finally {
-      button.disabled = false;
+      button.disabled = true;
       zipButton.disabled = false;
       spinner.style.display = "none";
     }

@@ -42,78 +42,6 @@
     });
   }
 
-  function findCompetenciaColumnIndex(tableEl) {
-    const thead = tableEl.querySelector("thead");
-    const headerRow =
-      (thead && thead.querySelector("tr")) || tableEl.querySelector("tr");
-    const headers = headerRow ? Array.from(headerRow.querySelectorAll("th, td")) : [];
-    for (let i = 0; i < headers.length; i++) {
-      const txt = normalize(headers[i].innerText || "");
-      if (txt.includes("competencia") || txt.includes("competência")) return i;
-    }
-    const bodyRows = Array.from(tableEl.querySelectorAll("tbody tr"));
-    if (bodyRows.length > 0) {
-      const first = bodyRows[0];
-      const cells = Array.from(first.querySelectorAll("td"));
-      for (let i = 0; i < cells.length; i++) {
-        const mm = extractMonthFromCompetencia(cells[i].innerText || "");
-        if (mm) return i;
-      }
-    }
-    return -1;
-  }
-
-  function extractMonthFromCompetencia(text) {
-    const t = (text || "").trim();
-    const m1 = t.match(/(\d{2})[\/\-](\d{4})/);
-    if (m1) {
-      const mm = m1[1];
-      const n = parseInt(mm, 10);
-      if (Number.isFinite(n) && n >= 1 && n <= 12) return mm;
-    }
-    const m2 = t.match(/(\d{4})[\/\-](\d{2})/);
-    if (m2) {
-      const mm = m2[2];
-      const n = parseInt(mm, 10);
-      if (Number.isFinite(n) && n >= 1 && n <= 12) return mm;
-    }
-    return null;
-  }
-
-  function extractYearFromCompetencia(text) {
-    const t = (text || "").trim();
-    const m1 = t.match(/(\d{2})[\/\-](\d{4})/);
-    if (m1) {
-      return m1[2];
-    }
-    const m2 = t.match(/(\d{4})[\/\-](\d{2})/);
-    if (m2) {
-      return m2[1];
-    }
-    return null;
-  }
-
-  function rowMatchesMonth(tr, month, year, compIdx) {
-    if (!month) return true;
-    const cell = tr.querySelector(SELECTORS.competenciaCell);
-    if (cell) {
-      const txt = cell.innerText || "";
-      const mm = extractMonthFromCompetencia(txt);
-      const yy = extractYearFromCompetencia(txt);
-      if (mm && (!year || yy === year)) return mm === month;
-    }
-    if (compIdx >= 0) {
-      const cells = Array.from(tr.querySelectorAll("td"));
-      if (compIdx < cells.length) {
-        const txt = cells[compIdx].innerText || "";
-        const mm = extractMonthFromCompetencia(txt);
-        const yy = extractYearFromCompetencia(txt);
-        if (mm && (!year || yy === year)) return mm === month;
-      }
-    }
-    return false;
-  }
-
   function findXmlLinkInRow(tr) {
     const anchors = Array.from(tr.querySelectorAll(SELECTORS.xmlLink));
     for (const a of anchors) {
@@ -133,13 +61,10 @@
     }
   }
 
-  function collectXmlLinksFromTable(tableEl, month, year) {
-    const compIdx = findCompetenciaColumnIndex(tableEl);
+  function collectXmlLinksFromTable(tableEl) {
     const rows = Array.from(tableEl.querySelectorAll("tbody tr"));
     const urls = [];
     rows.forEach((tr) => {
-      const match = rowMatchesMonth(tr, month, year, compIdx);
-      if (!match) return;
       const url = findXmlLinkInRow(tr);
       if (url) urls.push(url);
     });
@@ -177,59 +102,39 @@
     return parser.parseFromString(html, "text/html");
   }
 
-  function compareYearMonth(aYear, aMonth, bYear, bMonth) {
-    const ay = parseInt(aYear || "0", 10);
-    const by = parseInt(bYear || "0", 10);
-    const am = parseInt(aMonth || "0", 10);
-    const bm = parseInt(bMonth || "0", 10);
-    if (ay !== by) return ay - by;
-    return am - bm;
-  }
-
-  async function collectXmlLinksAcrossPages(month, year) {
+  async function collectXmlLinksAcrossPages() {
     const currentUrl = new URL(window.location.href);
-    const base = `${currentUrl.origin}/EmissorNacional/Notas/Emitidas`;
+    // Preserva os parametros atuais (filtros) e ajusta apenas a pagina
+    const baseUrl = currentUrl.origin + currentUrl.pathname;
+    const currentParams = new URLSearchParams(currentUrl.search);
+    
     const currentDoc = document;
     const maxPage = getMaxPageFromDoc(currentDoc);
     const urls = [];
 
     for (let pg = 1; pg <= maxPage; pg++) {
-      const url = `${base}?pg=${pg}`;
+      currentParams.set("pg", pg.toString());
+      const url = `${baseUrl}?${currentParams.toString()}`;
+      
       let doc;
-      if (pg === parseInt(currentUrl.searchParams.get("pg") || "1", 10)) {
+      const currentPgParam = parseInt(new URLSearchParams(window.location.search).get("pg") || "1", 10);
+      
+      if (pg === currentPgParam) {
         doc = currentDoc;
       } else {
+        // Pequeno delay para evitar bloqueio
+        await new Promise((r) => setTimeout(r, 200));
         const html = await fetchPageHtml(url);
         doc = parseHtmlToDoc(html);
       }
-      const tableEl = doc.querySelector(SELECTORS.table) || doc.querySelector("table.table");
-      if (!tableEl) continue;
-      const pageUrls = collectXmlLinksFromTable(tableEl, month, year);
-      urls.push(...pageUrls);
-      await new Promise((r) => setTimeout(r, 150));
-      if (year) {
-        const rows = Array.from(tableEl.querySelectorAll("tbody tr"));
-        let minY = null, minM = null;
-        for (const tr of rows) {
-          const cell = tr.querySelector(SELECTORS.competenciaCell) || tr.querySelectorAll("td")[findCompetenciaColumnIndex(tableEl)];
-          const txt = cell ? (cell.innerText || "") : (tr.innerText || "");
-          const yy = extractYearFromCompetencia(txt);
-          const mm = extractMonthFromCompetencia(txt);
-          if (yy && mm) {
-            if (minY === null) { minY = yy; minM = mm; }
-            else {
-              const cmp = compareYearMonth(yy, mm, minY, minM);
-              if (cmp < 0) { minY = yy; minM = mm; }
-            }
-          }
-        }
-        if (minY && minM) {
-          const cmpTarget = compareYearMonth(minY, minM, year, month || "01");
-          if (cmpTarget < 0) break;
-        }
+
+      const table = findTargetTable(doc);
+      if (table) {
+        const pageUrls = collectXmlLinksFromTable(table);
+        urls.push(...pageUrls);
       }
     }
-    return Array.from(new Set(urls));
+    return urls;
   }
 
   async function startDomDownloads(urls, status, spinner) {
@@ -263,8 +168,8 @@
     }
   }
 
-  async function fetchXmlEntries(month, year, onProgress) {
-    const urls = await collectXmlLinksAcrossPages(month, year || "");
+  async function fetchXmlEntries(onProgress) {
+    const urls = await collectXmlLinksAcrossPages();
     const entries = [];
     if (typeof onProgress === "function") onProgress(0);
     for (let i = 0; i < urls.length; i++) {

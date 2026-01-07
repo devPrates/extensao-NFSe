@@ -1,206 +1,179 @@
-function injectToolbar(target) {
-  const container = document.createElement("div");
-  container.id = "nfse-ext-toolbar";
-  container.style.display = "flex";
-  container.style.gap = "8px";
-  container.style.margin = "12px 0";
-  container.style.alignItems = "center";
-
-  const select = document.createElement("select");
-  select.id = "nfse-ext-month";
-  select.style.padding = "6px 8px";
-  const optAll = document.createElement("option");
-  optAll.value = "";
-  optAll.textContent = "Todos os meses";
-  select.appendChild(optAll);
-  for (let m = 1; m <= 12; m++) {
-    const mm = String(m).padStart(2, "0");
-    const opt = document.createElement("option");
-    opt.value = mm;
-    opt.textContent = `Mês ${mm}`;
-    select.appendChild(opt);
-  }
-
-  const yearSelect = document.createElement("select");
-  yearSelect.id = "nfse-ext-year";
-  yearSelect.style.padding = "6px 8px";
-  const optYAll = document.createElement("option");
-  optYAll.value = "";
-  optYAll.textContent = "Todos os anos";
-  yearSelect.appendChild(optYAll);
-  const currentYear = new Date().getFullYear();
-  for (let y = 0; y < 6; y++) {
-    const yy = String(currentYear - y);
-    const opt = document.createElement("option");
-    opt.value = yy;
-    opt.textContent = yy;
-    yearSelect.appendChild(opt);
-  }
-
-  const button = document.createElement("button");
-  button.id = "nfse-ext-download-all";
-  button.textContent = "Baixar Todos";
-  button.style.padding = "6px 12px";
-  button.style.cursor = "pointer";
-  button.disabled = true;
-
-  const zipButton = document.createElement("button");
-  zipButton.id = "nfse-ext-zip-all";
-  zipButton.textContent = "Gerar .zip";
-  zipButton.style.padding = "6px 12px";
-  zipButton.style.cursor = "pointer";
-
-  const status = document.createElement("span");
-  status.id = "nfse-ext-status";
-  status.style.marginLeft = "8px";
-  status.style.fontSize = "12px";
-
-  ensureStyles();
-  const spinner = document.createElement("span");
-  spinner.id = "nfse-ext-spinner";
-  spinner.className = "nfse-ext-spinner";
-  spinner.style.display = "none";
-  spinner.style.marginLeft = "0";
-
-  const statusProcess = document.createElement("span");
-  statusProcess.id = "nfse-ext-status-process";
-  statusProcess.style.marginLeft = "0";
-  statusProcess.style.fontSize = "12px";
-
-  const statusPercent = document.createElement("span");
-  statusPercent.id = "nfse-ext-status-percent";
-  statusPercent.style.marginLeft = "4px";
-  statusPercent.style.fontSize = "12px";
-
-  const statusGroup = document.createElement("span");
-  statusGroup.id = "nfse-ext-status-group";
-  statusGroup.style.display = "inline-flex";
-  statusGroup.style.alignItems = "center";
-  statusGroup.style.gap = "4px";
-  statusGroup.appendChild(spinner);
-  statusGroup.appendChild(statusProcess);
-
-  const progress = document.createElement("progress");
-  progress.id = "nfse-ext-progress";
-  progress.max = 100;
-  progress.value = 0;
-  progress.style.width = "120px";
-  progress.style.marginLeft = "2px";
-  progress.style.display = "none";
-
-  container.appendChild(select);
-  container.appendChild(yearSelect);
-  container.appendChild(button);
-  container.appendChild(zipButton);
-  container.appendChild(statusGroup);
-  container.appendChild(statusPercent);
-  container.appendChild(progress);
-
-  target.parentNode.insertBefore(container, target);
-  return { select, yearSelect, button, zipButton, statusProcess, statusPercent, spinner, progress };
-}
-
-
-function ensureStyles() {
-  if (document.getElementById("nfse-ext-style")) return;
-  const style = document.createElement("style");
-  style.id = "nfse-ext-style";
-  style.textContent = `
-    .nfse-ext-spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid #bbb;
-      border-top-color: #333;
-      border-radius: 50%;
-      animation: nfse-ext-spin 0.8s linear infinite;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
-    @keyframes nfse-ext-spin { to { transform: rotate(360deg); } }
-  `;
-  document.head.appendChild(style);
-}
-
-async function main() {
-  const tableEl = await (window.NFSE && NFSE.collect && NFSE.collect.waitForTable ? NFSE.collect.waitForTable() : Promise.resolve(null));
-  if (!tableEl) return;
-  const { select, yearSelect, button, zipButton, statusProcess, statusPercent, spinner, progress } = injectToolbar(tableEl);
-
-  const updateSelection = () => {
-    const month = select.value || "todos";
-    const year = yearSelect.value || "";
-    statusProcess.textContent = `Selecionado: ${month}${year ? "/" + year : ""}`;
-    statusPercent.textContent = "";
-  };
-  select.addEventListener("change", updateSelection);
-  yearSelect.addEventListener("change", updateSelection);
-  updateSelection();
-
-  button.addEventListener("click", async () => {
-    button.disabled = true;
-    zipButton.disabled = true;
-    const month = select.value || "";
-    const year = yearSelect.value || "";
-    statusProcess.textContent = "Coletando XMLs...";
-    statusPercent.textContent = "";
-    spinner.style.display = "inline-block";
-    try {
-      const urls = await NFSE.collect.collectXmlLinksAcrossPages(month, year);
-      if (!urls.length) {
-        statusProcess.textContent = "Nenhum XML encontrado para o mês selecionado";
-        return;
+(() => {
+  // Configuração e estilos
+  function ensureStyles() {
+    if (document.getElementById("nfse-ext-style")) return;
+    const style = document.createElement("style");
+    style.id = "nfse-ext-style";
+    style.textContent = `
+      .nfse-ext-spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #bbb;
+        border-top-color: #333;
+        border-radius: 50%;
+        animation: nfse-ext-spin 0.8s linear infinite;
+        margin-left: 6px;
+        vertical-align: middle;
       }
-      statusProcess.textContent = `Iniciando download de ${urls.length} arquivo(s)`;
-      await NFSE.collect.startDomDownloads(urls, statusProcess, spinner);
-    } catch (e) {
-      statusProcess.textContent = "Erro ao coletar XMLs";
-    } finally {
-      button.disabled = true;
-      zipButton.disabled = false;
-      spinner.style.display = "none";
-    }
-  });
+      @keyframes nfse-ext-spin { to { transform: rotate(360deg); } }
+      
+      .nfse-ext-btn {
+        margin-left: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
-  zipButton.addEventListener("click", async () => {
-    button.disabled = true;
-    zipButton.disabled = true;
-    const month = select.value || "";
-    const year = yearSelect.value || "";
-    statusProcess.textContent = "Gerando ZIP...";
-    statusPercent.textContent = "0%";
-    spinner.style.display = "inline-block";
-    progress.style.display = "inline-block";
+  // Encontra o container do botão de filtro para injetar nossos botões ao lado
+  function findFilterContainer() {
+    // Procura pelo botão de filtrar
+    const imgs = Array.from(document.querySelectorAll('img[src*="btn-filtrar"]'));
+    for (const img of imgs) {
+      const btn = img.closest('button');
+      if (btn) {
+        // Tenta encontrar o container pai imediato (form-group) e depois o container flex
+        const formGroup = btn.closest('.form-group');
+        if (formGroup) {
+          // Opção A: Injetar dentro do mesmo container pai se for flex
+          const parent = formGroup.parentElement;
+          if (parent && getComputedStyle(parent).display === 'flex') {
+            return parent;
+          }
+          // Opção B: Retornar o próprio formGroup para injetar depois dele
+          return formGroup.parentElement || formGroup;
+        }
+        return btn.parentElement;
+      }
+    }
+    // Fallback: tenta encontrar a tabela e injetar antes dela
+    const table = document.querySelector('table.table-striped');
+    return table ? table.parentElement : null;
+  }
+
+  function injectDownloadButtons(targetContainer) {
+    if (!targetContainer) return null;
+    if (document.getElementById("nfse-ext-zip-all")) return null;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "form-group form-group-lg nfse-ext-btn"; // imita estilo da pagina
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.marginLeft = "10px";
+
+    // Botão ZIP
+    const zipButton = document.createElement("button");
+    zipButton.id = "nfse-ext-zip-all";
+    zipButton.className = "btn btn-lg btn-success"; // Estilo diferente para destaque
+    zipButton.type = "button";
+    zipButton.innerHTML = `<span>Baixar .zip</span>`;
+    zipButton.title = "Baixar todas as notas filtradas em ZIP";
+
+    // Elementos de status
+    const statusGroup = document.createElement("div");
+    statusGroup.style.display = "flex";
+    statusGroup.style.flexDirection = "column";
+    statusGroup.style.marginLeft = "10px";
+    statusGroup.style.fontSize = "12px";
+    statusGroup.style.lineHeight = "1.2";
+
+    const spinner = document.createElement("span");
+    spinner.className = "nfse-ext-spinner";
+    spinner.style.display = "none";
+
+    const statusText = document.createElement("span");
+    statusText.textContent = "";
+
+    const progress = document.createElement("progress");
+    progress.max = 100;
     progress.value = 0;
-    try {
-      const entries = await NFSE.collect.fetchXmlEntries(month, year, (p) => {
-        progress.value = p;
-        statusPercent.textContent = `${p}%`;
-      });
-      if (!entries.length) {
-        statusProcess.textContent = "Nenhum XML encontrado para o mês selecionado";
-        statusPercent.textContent = "";
-        return;
-      }
-      const zip = NFSE.zip.createZipStore(entries);
-      NFSE.zip.downloadBlob(zip, `nfse-xml-${month || "todos"}${year ? "-" + year : ""}.zip`);
-      statusProcess.textContent = `ZIP com ${entries.length} arquivo(s)`;
-      statusPercent.textContent = "";
-    } catch (e) {
-      statusProcess.textContent = "Erro ao gerar ZIP";
-      statusPercent.textContent = "";
-    } finally {
-      button.disabled = true;
-      zipButton.disabled = false;
-      spinner.style.display = "none";
-      progress.style.display = "none";
-      progress.value = 0;
-    }
-  });
-}
+    progress.style.width = "100px";
+    progress.style.display = "none";
+    progress.style.marginTop = "2px";
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => main());
-} else {
-  main();
-}
+    statusGroup.appendChild(statusText);
+    statusGroup.appendChild(progress);
+
+    wrapper.appendChild(zipButton);
+    wrapper.appendChild(spinner);
+    wrapper.appendChild(statusGroup);
+
+    targetContainer.appendChild(wrapper);
+
+    return { zipButton, statusText, spinner, progress };
+  }
+
+  async function main() {
+    ensureStyles();
+
+    // Aguarda tabela ou botão de filtro
+    const tableEl = await (window.NFSE && NFSE.collect && NFSE.collect.waitForTable ? NFSE.collect.waitForTable() : Promise.resolve(null));
+    
+    // Tenta encontrar o local de injeção
+    const filterContainer = findFilterContainer();
+    
+    if (!filterContainer && !tableEl) {
+        console.log("NFSe Extension: Local de injeção não encontrado.");
+        return;
+    }
+
+    // Prefere injetar no container do filtro, senão antes da tabela
+    const target = filterContainer || (tableEl ? tableEl.parentElement : document.body);
+    
+    const ui = injectDownloadButtons(target);
+    if (!ui) return; // Já injetado ou erro
+
+    const { zipButton, statusText, spinner, progress } = ui;
+
+    // Handler para Download ZIP
+    zipButton.addEventListener("click", async () => {
+      zipButton.disabled = true;
+      statusText.textContent = "Preparando...";
+      spinner.style.display = "inline-block";
+      progress.style.display = "inline-block";
+      progress.value = 0;
+
+      try {
+        // Coleta links respeitando a query string atual (filtros)
+        const entries = await NFSE.collect.fetchXmlEntries((p) => {
+          progress.value = p;
+          statusText.textContent = `Baixando: ${p}%`;
+        });
+
+        if (!entries || !entries.length) {
+          statusText.textContent = "Nenhum XML encontrado.";
+          return;
+        }
+
+        statusText.textContent = "Gerando ZIP...";
+        // Pequeno delay para UI atualizar
+        await new Promise(r => requestAnimationFrame(r));
+
+        const zip = NFSE.zip.createZipStore(entries);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+        NFSE.zip.downloadBlob(zip, `nfse-filtradas-${timestamp}.zip`);
+        
+        statusText.textContent = `Concluído: ${entries.length} arquivos.`;
+      } catch (e) {
+        console.error(e);
+        statusText.textContent = "Erro no processo.";
+      } finally {
+        zipButton.disabled = false;
+        spinner.style.display = "none";
+        setTimeout(() => {
+            progress.style.display = "none";
+        }, 3000);
+      }
+    });
+  }
+
+  // Inicia se o DOM já estiver pronto ou aguarda
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", main);
+  } else {
+    main();
+  }
+})();

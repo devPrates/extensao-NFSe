@@ -13,7 +13,7 @@
       "matches": [
         "https://www.nfse.gov.br/EmissorNacional/Notas/Emitidas*"
       ],
-      "js": ["scripts/nfse-zip.js", "scripts/nfse-collect.js", "content.js"],
+      "js": ["lib/jspdf.umd.min.js", "lib/jspdf.plugin.autotable.min.js", "scripts/nfse-zip.js", "scripts/nfse-collect.js", "content.js"],
       "run_at": "document_idle"
     }
   ]

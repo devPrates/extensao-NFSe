@@ -72,15 +72,6 @@
     zipButton.innerHTML = `<span>Baixar ZIP</span>`;
     zipButton.title = "Baixar todas as notas filtradas em ZIP";
 
-    // Botão Relatório PDF
-    const pdfButton = document.createElement("button");
-    pdfButton.id = "nfse-ext-pdf-report";
-    pdfButton.className = "btn btn-lg btn-primary"; // Estilo azul
-    pdfButton.type = "button";
-    pdfButton.style.marginLeft = "5px";
-    pdfButton.innerHTML = `<span>Emitir Relatório</span>`;
-    pdfButton.title = "Gerar relatório PDF com dados da tabela";
-
     // Elementos de status
     const statusGroup = document.createElement("div");
     statusGroup.style.display = "flex";
@@ -107,13 +98,12 @@
     statusGroup.appendChild(progress);
 
     wrapper.appendChild(zipButton);
-    wrapper.appendChild(pdfButton);
     wrapper.appendChild(spinner);
     wrapper.appendChild(statusGroup);
 
     targetContainer.appendChild(wrapper);
 
-    return { zipButton, pdfButton, statusText, spinner, progress };
+    return { zipButton, statusText, spinner, progress };
   }
 
   async function main() {
@@ -136,65 +126,7 @@
     const ui = injectDownloadButtons(target);
     if (!ui) return; // Já injetado ou erro
 
-    const { zipButton, pdfButton, statusText, spinner, progress } = ui;
-
-    // Handler para Relatório PDF
-    pdfButton.addEventListener("click", async () => {
-      zipButton.disabled = true;
-      pdfButton.disabled = true;
-      statusText.textContent = "Coletando dados...";
-      spinner.style.display = "inline-block";
-      
-      try {
-        const { headers, rows, totalValue } = await NFSE.collect.collectTableDataAcrossPages();
-
-        if (!rows || !rows.length) {
-          statusText.textContent = "Nenhum dado encontrado.";
-          return;
-        }
-
-        statusText.textContent = "Gerando PDF...";
-        await new Promise(r => requestAnimationFrame(r));
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('l', 'mm', 'a4'); // Paisagem para caber mais colunas
-
-        doc.setFontSize(16);
-        doc.text("Relatório de Notas Fiscais", 14, 15);
-        
-        doc.setFontSize(10);
-        doc.text(`Gerado em: ${new Date().toLocaleString()}`, 14, 22);
-        doc.text(`Total de registros: ${rows.length}`, 14, 27);
-        
-        // Formata e exibe o valor total
-        const formattedTotal = (totalValue || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        doc.setFont(undefined, 'bold');
-        doc.text(`Valor Total: ${formattedTotal}`, 14, 32);
-        doc.setFont(undefined, 'normal');
-
-        doc.autoTable({
-          head: [headers],
-          body: rows,
-          startY: 37, // Ajustado para dar espaço ao Valor Total
-          theme: 'striped',
-          styles: { fontSize: 7, cellPadding: 1, overflow: 'linebreak' },
-          headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
-          columnStyles: { 0: { cellWidth: 'auto' } } // Ajuste automático
-        });
-
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-        doc.save(`relatorio-nfse-${timestamp}.pdf`);
-        
-        statusText.textContent = "PDF gerado!";
-      } catch (e) {
-        console.error(e);
-        statusText.textContent = "Erro ao gerar PDF.";
-      } finally {
-        zipButton.disabled = false;
-        pdfButton.disabled = false;
-        spinner.style.display = "none";
-      }
-    });
+    const { zipButton, statusText, spinner, progress } = ui;
 
     // Handler para Download ZIP
     zipButton.addEventListener("click", async () => {

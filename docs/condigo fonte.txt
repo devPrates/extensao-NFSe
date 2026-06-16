@@ -1,0 +1,1095 @@
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NFS-e | Portal Contribuinte</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link href="/EmissorNacional/Content/Base?v=PNNgqFMeiX_JCCYDv-3Z3MCHsfnKA_V8oEHE8c3GJic1" rel="stylesheet"/>
+
+    
+
+    <script type="text/javascript">
+        window.UrlBase = "https://www.nfse.gov.br/emissornacional/";
+        window.UrlRest = "https://restnfseprod.srv.cd.serpro";
+        window.sessionStorage.setItem("accessToken", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRobWV0aG9kIjoiU0VOSEEiLCJ1bmlxdWVfbmFtZSI6IiIsImluc2NyaWNhbyI6IjQ3NDY1Mzc5MDAwMTc5IiwidGlwb19pbnNjcmljYW8iOiJDTlBKIiwibm9tZSI6IiIsInJvbGUiOiJDT05UUklCVUlOVEUiLCJuYmYiOjE3ODEwOTQ1MjUsImV4cCI6MTc4MTE4NDUyNSwiaWF0IjoxNzgxMDk0NTI1LCJpc3MiOiJodHRwOi8vd3d3LnNlcnByby5nb3YuYnIifQ.OahvjTgyV9mU2bcLbrw61BNeKCpetIwpB3dnBLqoH8U');
+    </script>
+    <script src="/EmissorNacional/Scripts/Base?v=9aYlZCGNwOnQ9M-uWKF6qWROrguA9sBYeGWayB9cXLg1"></script>
+
+    
+    <script src="/EmissorNacional/Areas/Notas/Scripts/Emitidas.js"></script>
+    <script src="/EmissorNacional/Areas/DPS/Scripts/AssinadorSerpro.js"></script>
+    <script src="/EmissorNacional/Areas/Notas/Scripts/AssinaturaPedRegEventoBase.js"></script>
+    <script src="/EmissorNacional/Areas/Notas/Scripts/AssinaturaPedRegEventoCancelamento.js"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand completa">
+                    <a href="/EmissorNacional/"><img src="/EmissorNacional/img/logo-nfse-assinatura-horizontal.svg" /></a>
+                </div>
+                <div class="navbar-brand simples">
+                    <a href="/EmissorNacional/"><img src="/EmissorNacional/img/logo-header-simples.svg" /></a>
+                </div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/EmissorNacional/" data-toggle="tooltip" data-placement="bottom"
+                           title="Principal"><div><img src="/EmissorNacional/img/menu-home-35.svg" /></div><span class="nome-mobile">Página Principal</span></a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                            <div><img src="/EmissorNacional/img/menu-nova-35.svg" /><span class="caret"></span></div><span class="nome-mobile">Nova NFS-e</span>
+                        </a>
+                        <ul class="dropdown-menu main-menu" style="right: -5px; margin-top: 5px;">
+                            <li class="dropdown-header titulo-menu">Tipos de emissão:</li>
+                            <li>
+                                <a href="/EmissorNacional/DPS/Pessoas">Emissão completa</a>
+                            </li>
+                            <li>
+                                <a href="/EmissorNacional/DPS/Simplificada">Emissão simplificada</a>
+                            </li>
+                            <li>
+                                <a href="/EmissorNacional/ByPass/Pessoas">Emissão por decisão administrativa/judicial</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/EmissorNacional/Notas/Emitidas" data-toggle="tooltip" data-placement="bottom"
+                           title="NFS-e Emitidas"><div><img src="/EmissorNacional/img/menu-emitidas-35.svg" style="top: -10px;" /></div><span class="nome-mobile">NFS-e Emitidas</span></a>
+                    </li>
+                    <li>
+                        <a href="/EmissorNacional/Notas/Recebidas" data-toggle="tooltip" data-placement="bottom"
+                           title="NFS-e Recebidas"><div><img src="/EmissorNacional/img/menu-recebidas-35.svg" /></div><span class="nome-mobile">NFS-e Recebidas</span></a>
+                    </li>
+                    <li>
+                        <a href="/EmissorNacional/Notas/Rascunhos" data-toggle="tooltip" data-placement="bottom"
+                           title="Rascunhos"><div><img src="/EmissorNacional/img/menu-rascunhos-35.svg" /></div><span class="nome-mobile">Rascunhos</span></a>
+                    </li>
+
+                    <!-- MAN desabilitado em Produção Restrita
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                            <div><img src="~/img/menu-apuracao-35.svg" /><span class="caret"></span></div><span class="nome-mobile">Apuração Nacional</span>
+                        </a>
+                        <ul class="dropdown-menu main-menu" style="right: -5px; margin-top: 5px;">
+                            <li class="dropdown-header titulo-menu">Apuração Nacional:</li>
+                            <li>
+                                <a href="">Pré-Apuração</a>
+                            </li>
+                            <li>
+                                <a href="">Apuração</a>
+                            </li>
+                            <li>
+                                <a href="">Arrecadação</a>
+                            </li>
+                            <li>
+                                <a href="">Créditos/Débitos</a>
+                            </li>
+                        </ul>
+                    </li>
+                    -->
+
+                    <li>
+                        <a href="/EmissorNacional/Perfil/Configuracao" data-toggle="tooltip" data-placement="bottom"
+                           title="Configurações"><div><img src="/EmissorNacional/img/menu-config-35.svg" /></div><span class="nome-mobile">Configurações</span></a>
+                    </li>
+                    <li>
+                        <a href="/EmissorNacional/Perfil/ServicosFavoritos" data-toggle="tooltip" data-placement="bottom"
+                           title="Serviços Favoritos"><div><img src="/EmissorNacional/img/menu-favoritos-35.svg" style="top: -2px;" /></div><span class="nome-mobile">Serviços Favoritos</span></a>
+                    </li>
+                    <li class="divisor"></li>
+                    <li class="dropdown perfil">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                            <div><img style="top: 2px" src="/EmissorNacional/img/menu-user-35.svg" /><span class="caret"></span></div>
+                        </a>
+                        <ul class="dropdown-menu main-menu" style="right: -5px; margin-top: 5px;">
+                            <li class="dropdown-header">
+                                H F BALAN SERVICOS MEDICOS LTDA<br />
+                                    <span>CNPJ: </span><span class="cnpj">47465379000179</span><br />
+                            </li>
+                            <li><a href="/EmissorNacional/Login/Sair">Sair com segurança</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <nav class="navbar navbar-default navbar-breadcrumbs">
+        <div class="container">
+            <div class="breadcrumbs">
+    <span class="nome-sistema">
+        <a href="/EmissorNacional/">
+            <i class="fa fa-home"></i>Home
+        </a>
+    </span>
+                <span class="separador">::</span>
+
+    NFS-e
+            <span class="separador">::</span>
+
+    Emitidas
+</div>
+        </div>
+    </nav>
+
+    <div class="container container-fluid-xl container-body">
+        
+
+
+
+<div id="erroAssinatura" class="alert-danger alert" style="display:none"><span class="icone"></span><a class="close" href="javascript:void(0);"></a></div>
+
+
+<h2>Notas emitidas</h2>
+<div id="pnlIdentificacao" class="pnlCollapse">
+    <div class="retratil">
+        <div class="bd-callout bd-callout-info">
+            Ao entrar na tela de Notas emitidas é exibido as notas fiscais emitidas nos últimos 30 dias. Para exibir as notas referentes a um outro período informe os campos data inicial e data final. Em seguida clique no botão filtrar.
+            O período informado não deve ser superior a 30 dias.
+        </div>
+    </div>
+</div>
+
+
+<div id="pnlComandos" class="navbar navbar-nfse">
+    <div class="navbar-collapse" id="searchbar">
+        <ul class="nav navbar-nav">
+            <li>
+                <a id="btnNovaNFSe" href="/EmissorNacional/DPS/Pessoas" class="btn btn-lg btn-primary">
+                    <img src="/EmissorNacional/img/btn-novo.svg" /><span>Nova NFS-e</span>
+                </a>
+            </li>
+            <li>
+                <a id="btnRecarregar" href="/EmissorNacional/Notas/Emitidas" class="btn btn-lg btn-info" data-toggle="tooltip" title="Recarregar">
+                    <img src="/EmissorNacional/img/btn-recarregar.svg" style="height: 21px;" /><span>Recarregar lista</span>
+                </a>
+            </li>
+        </ul>
+<form action="/EmissorNacional/Notas/Emitidas" class="navbar-form" method="get">            <div class="form-group" style="display:inline;">
+                <div class="input-group input-group-lg" style="display:table;">
+                    <input class="form-control" name="busca" placeholder="Pesquisar pessoa física ou jurídica" type="text">
+                    <span class="input-group-btn" style="width:1%;">
+                        <button id="btnPesquisar" class="btn btn-default" type="submit"><img src="/EmissorNacional/img/btn-pesquisar-esq.svg" /></button>
+                    </span>
+                </div>
+            </div>
+            <br />
+            <div style="display: flex; align-items: center; justify-content: flex-start;">
+                <div class="form-group form-group-lg">
+                    <label class="control-label"><span>Data Inicial</span></label>
+                    <div class="input-group input-group-lg"><input class="form-control data" id="datainicio" name="datainicio" type="text" value="11/05/2026" /><span class="input-group-btn"><button class="btn btn-lg btn-default btnCalendario" data-original-title="Abrir calendário" data-toggle="tooltip" id="btn_datainicio" type="button"><div class="btn-calendario"></div></button></span></div>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="datainicio" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; justify-content: flex-start; gap: 10px;">
+                    <div class="form-group form-group-lg">
+                        <label class="control-label"><span>Data Final</span></label>
+                        <div class="input-group input-group-lg"><input class="form-control data" id="datafim" name="datafim" type="text" value="10/06/2026" /><span class="input-group-btn"><button class="btn btn-lg btn-default btnCalendario" data-original-title="Abrir calendário" data-toggle="tooltip" id="btn_datafim" type="button"><div class="btn-calendario"></div></button></span></div>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="datafim" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="form-group form-group-lg">
+                        <button type="submit" class="btn btn-lg btn-primary">
+                            <img src="/EmissorNacional/img/btn-filtrar.svg"/> Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+</form>
+    </div>
+
+</div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="td-data">
+                    <a href="/EmissorNacional/Notas/Emitidas?col=data_desc">Geração<span class="fa fa-angle-down sortIcon"></span></a>
+                </th>
+                <th>
+                    
+                    Emitida para
+                </th>
+                <th class="td-competencia" style="width: 200px;text-align:center;">
+                    Competência
+                    <!--Html.LinkOrdenacao("Competência", "competencia", (string)ViewBag.CampoOrdenacaoPadrao)
+                        Para usar LinkOrdenação será necessário alterar procedure P_ListarNotasPorEmitente
+                        e gerar nova versão do Serpro.Sped.NFSe.AD ( TipoOrdenacaoEmitidas.cs )
+                    -->
+                </th>
+                <th class="td-center" style="width: 200px;">
+                    Município Emissor
+                </th>
+                <th class="td-valor" style="width: 160px;">
+                    <a href="/EmissorNacional/Notas/Emitidas?col=valor_asc">Preço Serviço (R$)<span></span></a>
+                </th>
+                <th class="td-situacao">
+                    <a href="/EmissorNacional/Notas/Emitidas?col=situacao_asc">Situação<span></span></a>
+                </th>
+                
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxa005Ri92SDQ0NWdBRlZZQTZBczdDZEI0REtLN0pQdlI4PQ2" data-situacao="P100_GERADA" data-valor="910,00">
+                    <td class="td-data">
+                        30/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">05473856179</span>
+                                    -
+GABRIELA CAROLINE BUZZATTO                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        910,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000039426058663183578" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000039426058663183578" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000039426058663183578" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbklvVTVvdStndmlRRkRRcnNXc2d6YlR0QUVFbzV5TU5VPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        29/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">87144891120</span>
+                                    -
+SOLANGE PALONIS SILVA CRUZ                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000039326050405357396" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000039326050405357396" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000039326050405357396" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbEdNRWJlcU1QQWhycFpCd3hCMG1adlliQUQrRC95bUdBPQ2" data-situacao="P100_GERADA" data-valor="400,00">
+                    <td class="td-data">
+                        29/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">44811039149</span>
+                                    -
+VANDERLEIA APARECIDA DE SOUZA                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        400,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000039226053075224445" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000039226053075224445" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000039226053075224445" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxa3FydFZHWVRUY0JrUHM2dXB1dUJLc1E0MlhTS3Z2SHFNPQ2" data-situacao="P100_GERADA" data-valor="400,00">
+                    <td class="td-data">
+                        29/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">84055200153</span>
+                                    -
+MARCIO JOSE DE OLIVEIRA                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        400,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000039126050217872974" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000039126050217872974" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000039126050217872974" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxa0ZVdld4K2ZqaGphNUw3cENPaDh3eE5oZUp2YUpSS0g4PQ2" data-situacao="P100_GERADA" data-valor="400,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">04892387185</span>
+                                    -
+LETICIA DE SOUZA  MORAES                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        400,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000039026057960441447" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000039026057960441447" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000039026057960441447" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbDZ6amJaM2xFT0wwbDZyck14bWR4MmhIOFZ5Q1BLMWljPQ2" data-situacao="P100_GERADA" data-valor="400,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">04892387185</span>
+                                    -
+LETICIA DE SOUZA  MORAES                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        400,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038926057148557894" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038926057148557894" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038926057148557894" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbFc1VVc5eHlndTZUN2xYajF3bnhGVWR3RktRN2t4S3kwPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">02039507981</span>
+                                    -
+ANDREIA RODRIGUES DOS SANTOS PIMENTEL                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038826057993086464" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038826057993086464" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038826057993086464" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbGhkTUh3S3lBeG5iM2lwUzc2NjJUa0lNZHgvMlZMWXNZPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">71931864187</span>
+                                    -
+PRISCILA GIGLIOLA URAGUE DE FREITAS                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038726053480108302" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038726053480108302" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038726053480108302" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbDY5WFRHcU1tRENhT25kK0p1T0kydi9WeEw4Vm1aMUc4PQ2" data-situacao="P100_GERADA" data-valor="350,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">00523455135</span>
+                                    -
+GIOVANNI GARBOSA                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        350,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038626058140860269" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038626058140860269" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038626058140860269" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbmwrSjh5dElxZkdwRjQ3aUF0a0VJZ0NOclZ3dCtsOWdBPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        27/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">55814980915</span>
+                                    -
+MARGARETE MARQUES DE SOUZA 558                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038526053503650097" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038526053503650097" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038526053503650097" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxazFxODNQT1YxaGo2VUxPNldWeVU1NlBZaGJ3L3Y3aWlvPQ2" data-situacao="P100_GERADA" data-valor="1450,00">
+                    <td class="td-data">
+                        23/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">92530320225</span>
+                                    -
+MIGUEL IZIDIO DOMINGUES                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        1.450,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038426052526058249" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038426052526058249" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038426052526058249" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbmxjWnIxek1VRldBT0hvSGdXcnFzMFliZXJnZ2ZtMTdZPQ2" data-situacao="P100_GERADA" data-valor="700,00">
+                    <td class="td-data">
+                        21/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">22590358920</span>
+                                    -
+ANTONIO VICENTE DE LIRA                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        700,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038326057755629071" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038326057755629071" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038326057755629071" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbFlYYUx3bHNYcHlHRFM0bDArT1NILzVaV0poeWlpQ3lNPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        20/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">03345163152</span>
+                                    -
+NELMAR HELFENSTEIN MICHAELSEN                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038226055076446712" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038226055076446712" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038226055076446712" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbVllRndFQW5KK3U3STk1d1g3NTl2Z2lobkgydWFHaXBvPQ2" data-situacao="P100_GERADA" data-valor="250,00">
+                    <td class="td-data">
+                        20/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">96673990104</span>
+                                    -
+ROSIMARA ALVES DO PRADO                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        250,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038126056137502964" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038126056137502964" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038126056137502964" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr data-chave="NzNmMHJ0L1hYZUlIemx6d2R5Mkl1V3hES1FLRnBvandoNU03WWlMWkVxbUhDVHdHK0xEVmovTEp0RERlK0JFQ0JiVzFEWTlYRi9BPQ2" data-situacao="P100_GERADA" data-valor="400,00">
+                    <td class="td-data">
+                        20/05/2026
+                        
+                    </td>
+                    <td class="td-texto-grande">
+                        <div>
+<img data-toggle="tooltip" title="Tomador" src="/EmissorNacional/img/tb-tomador.svg" />
+                                    <span class="cpf">01897457111</span>
+                                    -
+GISELE MARIA DIAS                        </div>
+                    </td>
+                    <td class="td-competencia" style="text-align:center;">
+                        05/2026
+                    </td>
+                    <td class="td-center">
+                        Eldorado/MS
+                    </td>
+                    <td class="td-valor">
+                        400,00
+                    </td>
+                    <td class="td-situacao">
+                                    <img data-toggle="tooltip" src="/EmissorNacional/img/tb-gerada.svg" title="" data-original-title="NFS-e emitida">
+                    </td>
+                    
+                    <td class="td-opcoes">
+                        <div class="menu-suspenso-tabela">
+                            <a class="icone-trigger" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-option-vertical"></i>
+                            </a>
+                            <div class="list-group menu-content" style="display: none">
+                                <a href="/EmissorNacional/Notas/Visualizar/Index/50037511247465379000179000000000038026055844714891" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-visualizar.svg" />Visualizar
+                                </a>
+                                    <a href="javascript:void(0);" data-bypass="false"
+                                       class="list-group-item btnSubstituir">
+                                        <img src="/EmissorNacional/img/op-substituir.svg" />Substituir
+                                    </a>
+                                    <a href="javascript:void(0);" class="list-group-item btnCancelar">
+                                        <img src="/EmissorNacional/img/op-cancelar.svg" />Cancelar NFS-e
+                                    </a>
+                                <a href="/EmissorNacional/Notas/Download/NFSe/50037511247465379000179000000000038026055844714891" class="list-group-item">
+                                    <img src="/EmissorNacional/img/op-xml.svg" />Download XML
+                                </a>
+                                <a href="/EmissorNacional/Notas/Download/DANFSe/50037511247465379000179000000000038026055844714891" class="list-group-item" download>
+                                    <img src="/EmissorNacional/img/op-pdf.svg" />Download DANFS-e
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+<div class="row paginacao"><div class="col-sm-12 col-md-6 indice"><ul class="pagination"><li class="disabled"><a data-placement="top" data-toggle="tooltip" href="javascript:" title="Primeira"><i class="fa fa-angle-double-left"></i></a></li><li class="disabled"><a data-placement="top" data-toggle="tooltip" href="javascript:" title="Anterior"><i class="fa fa-angle-left"></i></a></li><li class="active"><a data-placement="top" data-toggle="tooltip" href="javascript:" title="Página 1">1</a></li><li><a data-placement="top" data-toggle="tooltip" href="/EmissorNacional/Notas/Emitidas?pg=2" title="Página 2">2</a></li><li><a data-placement="top" data-toggle="tooltip" href="/EmissorNacional/Notas/Emitidas?pg=2" title="Próxima"><i class="fa fa-angle-right"></i></a></li><li><a data-placement="top" data-toggle="tooltip" href="/EmissorNacional/Notas/Emitidas?pg=2" title="Última"><i class="fa fa-angle-double-right"></i></a></li></ul></div><div class="col-sm-12 col-md-6 descricao">Total de 18 registros</div></div>
+<div id="modalCancelamento" class="modal fade" tabindex="-1" role="dialog"></div>
+
+    </div>
+
+    <footer>
+        <div class="parceiros">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-2">
+                        <a href="http://idg.receita.fazenda.gov.br/" target="_blank">
+                            <img src="/EmissorNacional/img/logo-rfb.png" class="logo" alt="Receita Federal do Brasil">
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="http://www.sebrae.com.br/" target="_blank">
+                            <img src="/EmissorNacional/img/logo-sebrae.png" class="logo" alt="Sebrae">
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="http://www.cnm.org.br/" target="_blank">
+                            <img src="/EmissorNacional/img/logo-cnm.png" class="logo" alt="Confederação Nacional dos Municípios">
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="http://www.abrasf.org.br/" target="_blank">
+                            <img src="/EmissorNacional/img/logo-abrasf.png" class="logo" alt="Associação Brasileira das Secretarias de Finanças das Capitais">
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="http://portal.siscomex.gov.br/legislacao/orgaos/secretaria-de-comercio-exterior-secex" target="_blank">
+                            <img src="/EmissorNacional/img/logo-secex.png" class="logo" alt="Secretaria de Comércio Exterior" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 logo">
+                        <img src="/EmissorNacional/img/logo-nfse-branca-sm.svg" class="logo-branca" alt="NFS-e" />
+                    </div>
+                    <div class="col-md-8 versao">
+                        Portal de Gestão NFS-e - Contribuinte | Versão 1.6.0.0
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modalLoading" class="modalBgLoading" style="display:none;">
+        <div class="loading">
+            <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+            <div class="texto">Por favor, aguarde...</div>
+        </div>
+    </div>
+
+    <div id="modalPessoa" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div id="modalCaptcha" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-captcha" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <!-- hCaptcha: carregar uma única vez -->
+    <script src="https://js.hcaptcha.com/1/api.js?hl=pt" async defer></script>
+
+</body>
+</html>
